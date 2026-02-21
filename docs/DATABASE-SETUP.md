@@ -16,7 +16,9 @@ Choose one:
 
 ## 2. Update environment variables
 
-Edit **`.env`** and **`.env.local`** and set:
+Edit **`.env`** (and optionally **`.env.local`**) and set:
+
+**Note:** Prisma CLI (`db push`, `migrate`, `studio`) loads **`.env`** only, not `.env.local`. So put `DATABASE_URL` in **`.env`** for those commands to work. Next.js loads both, with `.env.local` overriding `.env`.
 
 ```env
 # Required – Prisma uses this (see prisma/schema.prisma)
