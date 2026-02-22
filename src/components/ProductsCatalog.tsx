@@ -277,7 +277,7 @@ export default function ProductsCatalog({ categories, initialCategorySlug }: Pro
       : p.price;
 
     return (
-      <div className="tsf-product_list h-full" key={p.id}>
+      <div className="tsf-product_list h-full hidden" key={p.id}>
         <figure
           className="tsf-box-shadow tsf-font-bebas h-full flex flex-col cursor-pointer hover:shadow-lg hover:scale-[1.02] transition-all duration-200"
           onClick={() => handleProductClick(p)}
@@ -534,7 +534,7 @@ export default function ProductsCatalog({ categories, initialCategorySlug }: Pro
   };
 
   return (
-    <div className="tsf-product_heading" suppressHydrationWarning>
+    <div className="tsf-product_heading hidden" suppressHydrationWarning>
       {/* Search Bar and View Toggle */}
       <div className="w-full max-w-full mx-auto px-4 md:px-6 lg:px-7 mb-6 md:mb-8">
         <div className="flex items-center gap-4 max-w-2xl mx-auto">

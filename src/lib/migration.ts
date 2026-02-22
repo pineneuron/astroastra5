@@ -314,35 +314,41 @@ export class MigrationService {
     try {
       console.log('Seeding database with sample data...')
 
-      // Create sample categories
+      // Upsert sample categories
       const categories = [
-        { id: 'chicken', name: 'Chicken Items', slug: 'chicken-items' },
-        { id: 'fish', name: 'Fish Items', slug: 'fish-items' },
-        { id: 'mutton', name: 'Mutton Items', slug: 'mutton-items' }
+        { id: 'rudraksha', name: 'Rudraksha', slug: 'rudraksha' },
+        { id: 'crystals', name: 'Crystals', slug: 'crystals' },
+        { id: 'gemstones', name: 'Gemstones', slug: 'gemstones' },
+        { id: 'yantra', name: 'Yantra', slug: 'yantra' },
+        { id: 'books', name: 'Books', slug: 'books' },
       ]
 
       for (const category of categories) {
-        await prisma.category.create({
-          data: category
+        await prisma.category.upsert({
+          where: { id: category.id },
+          update: { name: category.name, slug: category.slug },
+          create: category,
         })
       }
 
-      // Create sample products
+      // Upsert sample products
       const products = [
         {
-          id: 'sample-chicken-1',
-          categoryId: 'chicken',
-          name: 'Sample Chicken Product',
-          slug: 'sample-chicken-product',
+          id: 'sample-rudraksha-1',
+          categoryId: 'rudraksha',
+          name: '5 Mukhi Rudraksha',
+          slug: '5-mukhi-rudraksha',
           basePrice: 500,
-          unit: 'per kg',
-          isActive: true
+          unit: 'per piece',
+          isActive: true,
         }
       ]
 
       for (const product of products) {
-        await prisma.product.create({
-          data: product
+        await prisma.product.upsert({
+          where: { id: product.id },
+          update: { name: product.name, basePrice: product.basePrice },
+          create: product,
         })
       }
 
