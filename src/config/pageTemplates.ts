@@ -277,37 +277,6 @@ export const PAGE_TEMPLATES: Record<string, PageTemplateDefinition> = {
     ],
     seo: { enabled: true },
   },
-  dealers: {
-    label: 'Our Dealers Page',
-    description: 'Dealer locations and contact information.',
-    sections: [
-      {
-        key: 'dealers',
-        label: 'Dealers',
-        fields: [
-          { key: 'headerBackground', label: 'Header Background', type: 'image', helperText: 'Background image for the header.' },
-          { key: 'heading', label: 'Page Heading', type: 'text', defaultValue: 'Find Our Dealers Near You' },
-          { key: 'description', label: 'Page Description', type: 'textarea', placeholder: 'Brief description about dealers.' },
-          {
-            key: 'dealers',
-            label: 'Dealers List',
-            type: 'repeater',
-            itemLabel: 'Dealer',
-            fields: [
-              { key: 'name', label: 'Dealer Name', type: 'text', required: true },
-              { key: 'city', label: 'City', type: 'text', required: true },
-              { key: 'address', label: 'Address', type: 'textarea' },
-              { key: 'phone', label: 'Phone', type: 'text' },
-              { key: 'email', label: 'Email', type: 'text' },
-              { key: 'latitude', label: 'Latitude', type: 'text', required: true, helperText: 'Map coordinate (e.g., 27.7172)' },
-              { key: 'longitude', label: 'Longitude', type: 'text', required: true, helperText: 'Map coordinate (e.g., 85.3240)' },
-            ],
-          },
-        ],
-      },
-    ],
-    seo: { enabled: true },
-  },
 }
 
 export const PAGE_TEMPLATE_OPTIONS = Object.entries(PAGE_TEMPLATES).map(([value, template]) => ({

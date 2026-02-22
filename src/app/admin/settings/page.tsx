@@ -6,16 +6,15 @@ import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { Wrench, Settings, Bell, Mail, Upload, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { getGeneralSettings, getNotificationSettings, getSmtpSettings, getWhatsAppSettings, updateGeneralSettings, updateNotificationSettings, updatePassword, updateProfile, updateSmtpSettings, updateWhatsAppSettings } from './actions'
+import { getGeneralSettings, getNotificationSettings, getSmtpSettings, updateGeneralSettings, updateNotificationSettings, updatePassword, updateProfile, updateSmtpSettings } from './actions'
 
-type SettingsCategory = 'profile' | 'general' | 'notifications' | 'smtp' | 'whatsapp'
+type SettingsCategory = 'profile' | 'general' | 'notifications' | 'smtp'
 
 const settingsCategories = [
   { id: 'profile' as SettingsCategory, label: 'Profile', icon: Wrench },
   { id: 'general' as SettingsCategory, label: 'General', icon: Settings },
   { id: 'notifications' as SettingsCategory, label: 'Notifications', icon: Bell },
   { id: 'smtp' as SettingsCategory, label: 'SMTP', icon: Mail },
-  { id: 'whatsapp' as SettingsCategory, label: 'WhatsApp', icon: Bell },
 ]
 
 export default function SettingsPage() {
@@ -98,7 +97,6 @@ export default function SettingsPage() {
               {activeCategory === 'profile' && "Update your profile settings and personal preferences."}
               {activeCategory === 'general' && "Manage global site configuration and defaults."}
               {activeCategory === 'notifications' && "Control how the team receives alerts and updates."}
-              {activeCategory === 'whatsapp' && "Configure WhatsApp Cloud API settings for order notifications."}
             </p>
           </div>
 
@@ -107,7 +105,6 @@ export default function SettingsPage() {
             {activeCategory === 'general' && <GeneralSection />}
             {activeCategory === 'notifications' && <NotificationsSection />}
             {activeCategory === 'smtp' && <SmtpSection />}
-            {activeCategory === 'whatsapp' && <WhatsAppSection />}
           </div>
         </div>
       </div>
@@ -1142,254 +1139,6 @@ function SmtpSection() {
           className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-md cursor-pointer hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {saving ? 'Saving...' : 'Save SMTP Settings'}
-        </button>
-      </div>
-    </form>
-  )
-}
-
-function WhatsAppSection() {
-  const [accessToken, setAccessToken] = useState('')
-  const [phoneNumberId, setPhoneNumberId] = useState('')
-  const [businessAccountId, setBusinessAccountId] = useState('')
-  const [contactNumber, setContactNumber] = useState('')
-
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-
-  const [whatsappError, setWhatsappError] = useState('')
-  const [whatsappSuccess, setWhatsappSuccess] = useState('')
-  const [accessTokenError, setAccessTokenError] = useState('')
-  const [phoneNumberIdError, setPhoneNumberIdError] = useState('')
-
-  useEffect(() => {
-    let ignore = false
-
-    const loadWhatsAppSettings = async () => {
-      setLoading(true)
-      const whatsappResult = await getWhatsAppSettings()
-      const generalResult = await getGeneralSettings()
-      if (ignore) return
-
-      if (whatsappResult.ok && whatsappResult.data) {
-        setAccessToken(whatsappResult.data.accessToken ?? '')
-        setPhoneNumberId(whatsappResult.data.phoneNumberId ?? '')
-        setBusinessAccountId(whatsappResult.data.businessAccountId ?? '')
-      }
-
-      if (generalResult.ok && generalResult.data) {
-        setContactNumber(generalResult.data.whatsappContactNumber ?? '')
-      }
-
-      if (whatsappResult.ok && generalResult.ok) {
-        setWhatsappError('')
-      } else {
-        setWhatsappError(whatsappResult.error || generalResult.error || 'Failed to load WhatsApp settings')
-      }
-      setLoading(false)
-    }
-
-    void loadWhatsAppSettings()
-    return () => {
-      ignore = true
-    }
-  }, [])
-
-  const handleWhatsAppSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setSaving(true)
-    setWhatsappError('')
-    setWhatsappSuccess('')
-    setAccessTokenError('')
-    setPhoneNumberIdError('')
-
-    const trimmedAccessToken = accessToken.trim()
-    const trimmedPhoneNumberId = phoneNumberId.trim()
-    const trimmedBusinessAccountId = businessAccountId.trim()
-
-    let hasValidationError = false
-
-    if (!trimmedAccessToken) {
-      setAccessTokenError('WhatsApp Access Token is required')
-      hasValidationError = true
-    }
-
-    if (!trimmedPhoneNumberId) {
-      setPhoneNumberIdError('WhatsApp Phone Number ID is required')
-      hasValidationError = true
-    }
-
-    if (hasValidationError) {
-      setSaving(false)
-      return
-    }
-
-    const whatsappResult = await updateWhatsAppSettings({
-      accessToken: trimmedAccessToken,
-      phoneNumberId: trimmedPhoneNumberId,
-      businessAccountId: trimmedBusinessAccountId || undefined
-    })
-
-    // Also update the contact number in general settings
-    // First get current general settings to preserve them
-    const currentGeneral = await getGeneralSettings()
-    const trimmedContactNumber = contactNumber.trim()
-    
-    let contactNumberResult = { ok: true }
-    if (currentGeneral.ok && currentGeneral.data) {
-      const result = await updateGeneralSettings({
-        siteTitle: currentGeneral.data.siteTitle,
-        tagline: currentGeneral.data.tagline,
-        adminEmail: currentGeneral.data.adminEmail,
-        whatsappContactNumber: trimmedContactNumber
-      })
-      contactNumberResult = result
-    }
-
-    if (whatsappResult.ok && contactNumberResult.ok) {
-      setWhatsappSuccess('WhatsApp settings saved successfully')
-    } else {
-      setWhatsappError(whatsappResult.error || (contactNumberResult as { error?: string }).error || 'Failed to update WhatsApp settings')
-    }
-
-    setSaving(false)
-  }
-
-  if (loading) {
-    return (
-      <div className="space-y-8 w-full lg:max-w-[75%]">
-        <div>
-          <div className="h-5 w-40 rounded bg-gray-200 animate-pulse" />
-          <div className="mt-2 h-4 w-72 rounded bg-gray-200 animate-pulse" />
-        </div>
-
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <div className="h-4 w-48 rounded bg-gray-200 animate-pulse" />
-            <div className="h-10 w-full rounded bg-gray-200 animate-pulse" />
-          </div>
-          <div className="space-y-2">
-            <div className="h-4 w-44 rounded bg-gray-200 animate-pulse" />
-            <div className="h-10 w-full rounded bg-gray-200 animate-pulse" />
-          </div>
-          <div className="space-y-2">
-            <div className="h-4 w-52 rounded bg-gray-200 animate-pulse" />
-            <div className="h-10 w-full rounded bg-gray-200 animate-pulse" />
-          </div>
-        </div>
-
-        <div className="h-10 w-40 rounded bg-gray-200 animate-pulse" />
-      </div>
-    )
-  }
-
-  return (
-    <form onSubmit={handleWhatsAppSubmit} className="space-y-6 w-full lg:max-w-[75%]">
-      {whatsappSuccess && (
-        <div className="p-3 bg-green-50 border border-green-200 rounded-md text-sm text-green-600">
-          {whatsappSuccess}
-        </div>
-      )}
-      {whatsappError && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-600">
-          {whatsappError}
-        </div>
-      )}
-
-      <div className="p-4 bg-blue-50 border border-blue-200 rounded-md">
-        <p className="text-sm text-blue-800">
-          <strong>WhatsApp Cloud API Setup:</strong> To get your credentials, go to{' '}
-          <a href="https://developers.facebook.com/apps" target="_blank" rel="noopener noreferrer" className="underline">
-            Meta for Developers
-          </a>
-          {' '}and create a WhatsApp Business app. You&apos;ll need the Access Token and Phone Number ID from your app settings.
-        </p>
-      </div>
-
-      <div>
-        <label htmlFor="whatsappAccessToken" className="block text-sm font-semibold text-gray-900 mb-1.5">
-          Access Token
-        </label>
-        <input
-          id="whatsappAccessToken"
-          name="whatsappAccessToken"
-          type="password"
-          value={accessToken}
-          onChange={(e) => setAccessToken(e.target.value)}
-          className="w-full h-10 px-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          placeholder="EAAxxxxxxxxxxxxx"
-        />
-        {accessTokenError ? (
-          <p className="mt-1.5 text-xs text-red-600">{accessTokenError}</p>
-        ) : (
-          <p className="mt-1.5 text-xs text-gray-500">Your WhatsApp Cloud API access token from Meta for Developers.</p>
-        )}
-      </div>
-
-      <div>
-        <label htmlFor="whatsappPhoneNumberId" className="block text-sm font-semibold text-gray-900 mb-1.5">
-          Phone Number ID
-        </label>
-        <input
-          id="whatsappPhoneNumberId"
-          name="whatsappPhoneNumberId"
-          type="text"
-          value={phoneNumberId}
-          onChange={(e) => setPhoneNumberId(e.target.value)}
-          className="w-full h-10 px-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          placeholder="123456789012345"
-        />
-        {phoneNumberIdError ? (
-          <p className="mt-1.5 text-xs text-red-600">{phoneNumberIdError}</p>
-        ) : (
-          <p className="mt-1.5 text-xs text-gray-500">The Phone Number ID from your WhatsApp Business app.</p>
-        )}
-      </div>
-
-      <div>
-        <label htmlFor="whatsappBusinessAccountId" className="block text-sm font-semibold text-gray-900 mb-1.5">
-          Business Account ID (Optional)
-        </label>
-        <input
-          id="whatsappBusinessAccountId"
-          name="whatsappBusinessAccountId"
-          type="text"
-          value={businessAccountId}
-          onChange={(e) => setBusinessAccountId(e.target.value)}
-          className="w-full h-10 px-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          placeholder="123456789012345"
-        />
-        <p className="mt-1.5 text-xs text-gray-500">Optional: Your WhatsApp Business Account ID.</p>
-      </div>
-
-      <div className="pt-4 border-t border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Public Contact Number</h3>
-        <div>
-          <label htmlFor="whatsappContactNumber" className="block text-sm font-semibold text-gray-900 mb-1.5">
-            WhatsApp Contact Number
-          </label>
-          <input
-            id="whatsappContactNumber"
-            name="whatsappContactNumber"
-            type="text"
-            value={contactNumber}
-            onChange={(e) => setContactNumber(e.target.value)}
-            className="w-full h-10 px-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="+9779812345678"
-          />
-          <p className="mt-1.5 text-xs text-gray-500">
-            This number will be used for the floating WhatsApp button on the frontend. Format: +9779812345678 (include country code).
-          </p>
-        </div>
-      </div>
-
-      <div className="pt-2">
-        <button
-          type="submit"
-          disabled={saving}
-          className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-md cursor-pointer hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {saving ? 'Saving...' : 'Save WhatsApp Settings'}
         </button>
       </div>
     </form>

@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
         // Email configuration
         const smtpSettings = await getSmtpSettings()
         const fromEmail = smtpSettings.fromEmail || 'noreply@3starfoods.com'
-        const fromName = smtpSettings.fromName || '3 Star Foods'
+        const fromName = smtpSettings.fromName || 'Astra'
         const notificationSettings = await getNotificationSettings()
         const contactRecipients = notificationSettings.contactEmails.length
             ? notificationSettings.contactEmails

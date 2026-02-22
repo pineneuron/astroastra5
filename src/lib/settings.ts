@@ -25,7 +25,7 @@ export type SmtpSettings = {
 }
 
 const DEFAULT_GENERAL_SETTINGS: GeneralSettings = {
-  siteTitle: '3 Star Foods',
+  siteTitle: 'Astra',
   tagline: 'Three Star Foods website',
   siteIcon: '/images/favi-icon.svg',
   adminEmail: '',
@@ -44,7 +44,7 @@ const DEFAULT_SMTP_SETTINGS: SmtpSettings = {
   user: process.env.SMTP_USER || '',
   password: process.env.SMTP_PASS || '',
   fromEmail: process.env.MAIL_FROM_EMAIL || process.env.EMAIL_FROM || 'noreply@3starfoods.com',
-  fromName: process.env.MAIL_FROM_NAME || '3 Star Foods'
+  fromName: process.env.MAIL_FROM_NAME || 'Astra'
 }
 
 const GENERAL_SETTING_KEYS = {

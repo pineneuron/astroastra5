@@ -8,7 +8,7 @@ const GeneralSettingsContext = createContext<GeneralSettings | null>(null)
 // Fallback settings used if a component accidentally calls useGeneralSettings
 // outside of the GeneralSettingsProvider. This prevents hard runtime crashes.
 const FALLBACK_GENERAL_SETTINGS: GeneralSettings = {
-  siteTitle: '3 Star Foods',
+  siteTitle: 'Astra',
   tagline: 'Three Star Foods website',
   siteIcon: '/images/favi-icon.svg',
   adminEmail: '',

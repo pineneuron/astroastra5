@@ -46,7 +46,7 @@ export async function POST(req: Request) {
     // Send email with verification code
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXTAUTH_URL || 'http://localhost:3000';
     const logoUrl = `${baseUrl}/images/logo.png`;
-    const companyName = process.env.MAIL_FROM_NAME || '3 Star Foods';
+    const companyName = process.env.MAIL_FROM_NAME || 'Astra';
     const companyEmail = process.env.MAIL_FROM_EMAIL || process.env.EMAIL_FROM || 'noreply@3starfoods.com';
     const companyAddress = process.env.COMPANY_ADDRESS || '';
     const companyPhone = process.env.COMPANY_PHONE || '';

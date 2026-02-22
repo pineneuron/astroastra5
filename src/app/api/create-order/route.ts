@@ -216,7 +216,7 @@ export async function POST(request: NextRequest) {
     // Email configuration (from .env.local)
     const smtpSettings = await getSmtpSettings();
     const fromEmail = smtpSettings.fromEmail || 'orders@3starfoods.com';
-    const fromName = smtpSettings.fromName || '3 Star Foods';
+    const fromName = smtpSettings.fromName || 'Astra';
     const notificationSettings = await getNotificationSettings();
     const adminEmails = notificationSettings.orderEmails.length
       ? notificationSettings.orderEmails

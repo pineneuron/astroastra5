@@ -242,7 +242,7 @@ export class MigrationService {
    */
   static async initializeSystemSettings() {
     const defaultSettings = [
-      { key: 'site_name', value: '3 Star Foods', type: 'string', category: 'general' },
+      { key: 'site_name', value: 'Astra', type: 'string', category: 'general' },
       { key: 'site_description', value: 'Premium quality meat and frozen food products', type: 'string', category: 'general' },
       { key: 'currency', value: 'NPR', type: 'string', category: 'general' },
       { key: 'currency_symbol', value: 'Rs.', type: 'string', category: 'general' },
@@ -261,7 +261,7 @@ export class MigrationService {
       { key: 'smtp_user', value: '', type: 'string', category: 'smtp' },
       { key: 'smtp_pass', value: '', type: 'string', category: 'smtp' },
       { key: 'smtp_from_email', value: 'noreply@3starfoods.com', type: 'string', category: 'smtp' },
-      { key: 'smtp_from_name', value: '3 Star Foods', type: 'string', category: 'smtp' }
+      { key: 'smtp_from_name', value: 'Astra', type: 'string', category: 'smtp' }
     ]
 
     for (const setting of defaultSettings) {

@@ -31,7 +31,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
         <aside className="sticky top-0 h-screen bg-[oklch(.985 0 0)] border-r border-gray-200 flex flex-col">
           <Link href="/admin" className="h-14 flex items-center px-4">
             <LayoutDashboard className="h-5 w-5 text-[#030e55] mr-2" />
-            <span className="text-[15px] font-extrabold tracking-tight text-[#030e55] sidebar-label">3 Star Foods</span>
+            <span className="text-[15px] font-extrabold tracking-tight text-[#030e55] sidebar-label">Astra Admin</span>
           </Link>
 
           <SidebarNav />
