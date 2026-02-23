@@ -19,9 +19,10 @@ const navLinks = [
 ];
 
 const currencies = [
-  { code: 'USD', flag: '/images/icon-flag-us.png', label: 'US Dollar' },
-  { code: 'EUR', flag: '🇪🇺', label: 'Euro' },
-  { code: 'GBP', flag: '🇬🇧', label: 'British Pound' },
+  { code: 'CAD', flag: '🇨🇦', label: 'Canadian Dollar' },
+  { code: 'GBP', flag: '🇬🇧', label: 'UK Pound' },
+  { code: 'NPR', flag: '🇳🇵', label: 'Nepalese Rupee' },
+  { code: 'USD', flag: '🇺🇸', label: 'US Dollar' },
 ];
 
 export default function Header({ variant = 'home' }: HeaderProps) {
@@ -110,8 +111,8 @@ export default function Header({ variant = 'home' }: HeaderProps) {
                 onClick={() => setCurrencyOpen(v => !v)}
                 className="flex items-center gap-2 h-[40px] px-3 border border-[#b4b9c9] rounded-[3px] bg-white cursor-pointer"
               >
-                {selectedCurrency.code === 'USD' ? (
-                  <Image src="/images/icon-flag-us.png" alt="US" width={41} height={21} className="object-cover" />
+                {selectedCurrency.flag.startsWith('/') ? (
+                  <Image src={selectedCurrency.flag} alt={selectedCurrency.label} width={41} height={21} className="object-cover" />
                 ) : (
                   <span className="text-xl leading-none">{selectedCurrency.flag}</span>
                 )}
@@ -137,8 +138,8 @@ export default function Header({ variant = 'home' }: HeaderProps) {
                         selectedCurrency.code === c.code ? 'bg-amber-50 text-[#f37335]' : 'text-gray-800'
                       }`}
                     >
-                      {c.code === 'USD' ? (
-                        <Image src="/images/icon-flag-us.png" alt={c.label} width={28} height={16} className="object-cover rounded-sm flex-shrink-0" />
+                      {c.flag.startsWith('/') ? (
+                        <Image src={c.flag} alt={c.label} width={28} height={16} className="object-cover rounded-sm flex-shrink-0" />
                       ) : (
                         <span className="text-lg leading-none">{c.flag}</span>
                       )}
