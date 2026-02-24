@@ -98,7 +98,7 @@ export default function ZodiacSection() {
               <LeftPill key={sign.slug} sign={sign} />
             ))}
           </div>
-          <div className="flex items-center justify-center shrink-0 mx-4 w-[420px] h-[420px]">
+          <div className="flex items-center justify-center shrink-0 mx-4 w-[627.22px] h-[623.6px]">
             <div className="w-full h-full animate-[spin_45s_linear_infinite]">
               <Image src="/images/zodiac-wheel.png" alt="Zodiac Wheel" width={627.22} height={623.6} className="object-contain w-full h-full" />
             </div>
