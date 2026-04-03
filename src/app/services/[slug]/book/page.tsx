@@ -15,14 +15,13 @@ export default async function ServiceBookPage({ params }: { params: Promise<{ sl
   const originalPrice = Number(dbService.price);
   const salePrice = dbService.salePrice != null ? Number(dbService.salePrice) : null;
   const price = salePrice ?? originalPrice;
-  const isHomeVastu = dbService.slug === 'home-vastu';
 
   const service = {
     title: dbService.title,
     price,
     priceUnit: dbService.priceUnit,
     ...(salePrice != null && { originalPrice }),
-    ...(!isHomeVastu && { priceAlternativeText: 'Service Coming Soon' as const }),
+    ...(price <= 0 && { priceAlternativeText: 'Service Coming Soon' as const }),
     image: dbService.imageUrl ?? '/images/placeholder.png',
     href: `/services/${dbService.slug}`,
     slug: dbService.slug,

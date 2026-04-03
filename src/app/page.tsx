@@ -39,7 +39,10 @@ const STATIC_SERVICE_ITEMS: ServiceItem[] = [
   },
 ]
 
-function interleaveServicesWithStatics(services: ServiceItem[], statics: ServiceItem[]): ServiceItem[] {
+/** Featured DB services to show before Rudraksha / Vedic Gemstone interleave (2 = statics start at 3rd card). */
+const DB_ITEMS_BEFORE_STATIC_INTERLEAVE = 2
+
+function interleavePair(services: ServiceItem[], statics: ServiceItem[]): ServiceItem[] {
   const result: ServiceItem[] = []
   const max = Math.max(services.length, statics.length)
   for (let i = 0; i < max; i++) {
@@ -47,6 +50,16 @@ function interleaveServicesWithStatics(services: ServiceItem[], statics: Service
     if (i < statics.length) result.push(statics[i])
   }
   return result
+}
+
+function interleaveServicesWithStatics(
+  services: ServiceItem[],
+  statics: ServiceItem[],
+  leadDbCount: number,
+): ServiceItem[] {
+  const head = services.slice(0, leadDbCount)
+  const rest = services.slice(leadDbCount)
+  return [...head, ...interleavePair(rest, statics)]
 }
 
 export const metadata: Metadata = {
@@ -94,7 +107,10 @@ export default async function HomePage() {
             <Image src="/images/icon-arrow-right-sm.svg" alt="" width={16} height={10} />
           </Link>
         </div>
-        <ServicesSection services={interleaveServicesWithStatics(services, STATIC_SERVICE_ITEMS)} className="pb-[96px]" />
+        <ServicesSection
+          services={interleaveServicesWithStatics(services, STATIC_SERVICE_ITEMS, DB_ITEMS_BEFORE_STATIC_INTERLEAVE)}
+          className="pb-[96px]"
+        />
         <ZodiacSection />
         <EventsSection />
         <BookingSection />
